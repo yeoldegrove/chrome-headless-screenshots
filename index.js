@@ -69,6 +69,12 @@ let argv = yargs(process.argv.slice(2))
                 demandOption: false,
                 default: 'png',
             })
+            .option('fullPage', {
+                description: 'Take a screenshot of the full scrollable page',
+                type: 'boolean',
+                demandOption: false,
+                default: false,
+            })
             .positional('url', {
                 description:
                     'Url of the webpage you want to take a screenshot of',
@@ -142,6 +148,7 @@ function takeScreenshot(argv) {
                 .join(argv.outputDir, argv.filename + '.' + argv.format)
                 .toString(),
             type: argv.format,
+            fullPage: argv.fullPage,
         });
 
         await browser.close();
