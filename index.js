@@ -75,6 +75,17 @@ let argv = yargs(process.argv.slice(2))
                 demandOption: false,
                 default: 'png',
             })
+            .option('pdf', {
+                description: 'Create a PDF file',
+                type: 'boolean',
+                default: false,
+            })
+            .option('pdfFormat', {
+                description: 'Page Format of the PDF file',
+                type: 'string',
+                demandOption: false,
+                default: 'A4',
+            })
             .option('fullPage', {
                 description: 'Take a screenshot of the full scrollable page',
                 type: 'boolean',
@@ -163,6 +174,14 @@ function takeScreenshot(argv) {
             type: argv.format,
             fullPage: argv.fullPage,
         });
+        if (argv.pdf) {
+            await page.pdf({
+                path: path
+                    .join(argv.outputDir, argv.filename + '.' + 'pdf')
+                    .toString(),
+                format: argv.pdfFormat,
+            });        
+        };
 
         await browser.close();
     })();
