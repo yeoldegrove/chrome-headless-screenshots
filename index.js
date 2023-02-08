@@ -62,6 +62,12 @@ let argv = yargs(process.argv.slice(2))
                 demandOption: false,
                 default: 0,
             })
+            .option('timeout', {
+                description: 'Timeout for the page to be loaded in ms',
+                type: 'number',
+                demandOption: false,
+                default: 30000,
+            })
             .option('format', {
                 description: 'Image format of the screenshot',
                 type: 'string',
@@ -74,6 +80,13 @@ let argv = yargs(process.argv.slice(2))
                 type: 'boolean',
                 demandOption: false,
                 default: false,
+            })
+            .option('waitUntil', {
+                description: 'When to declare the page load complete. See https://pptr.dev/api/puppeteer.page.goto for details.',
+                type: 'string',
+                choices: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2'],
+                demandOption: false,
+                default: 'load',
             })
             .positional('url', {
                 description:
@@ -139,7 +152,7 @@ function takeScreenshot(argv) {
             }
         }
 
-        await page.goto(argv.url);
+        await page.goto(argv.url, {timeout: argv.timeout, waitUntil: argv.waitUntil});
 
         if (argv.delay) await delay(argv.delay);
 
