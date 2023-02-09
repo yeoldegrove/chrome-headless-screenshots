@@ -98,6 +98,11 @@ let argv = yargs(process.argv.slice(2))
                 demandOption: false,
                 default: 'A4',
             })
+            .option('pdfLandscape', {
+                description: 'Use Landscape Mode for the PDF file',
+                type: 'boolean',
+                default: false,
+            })
             .option('fullPage', {
                 description: 'Take a screenshot of the full scrollable page',
                 type: 'boolean',
@@ -212,6 +217,7 @@ function takeScreenshot(argv) {
                     .join(argv.outputDir, argv.filename + '.' + 'pdf')
                     .toString(),
                 format: argv.pdfFormat,
+                landscape: argv.pdfLandscape,
             });        
         };
 
