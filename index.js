@@ -103,6 +103,13 @@ let argv = yargs(process.argv.slice(2))
                 type: 'boolean',
                 default: false,
             })
+            .option('pdfMargin', {
+                description: 'Page Format of the PDF file in json as string',
+                description: 'Margins for the PDF file in json as string, e.g. {"top":"30px","left":"30px","bottom":"30px","right":"30px"}',
+                type: 'string',
+                demandOption: false,
+                default: '{"top":"0px","left":"0px","bottom":"0px","right":"0px"}',
+            })
             .option('fullPage', {
                 description: 'Take a screenshot of the full scrollable page',
                 type: 'boolean',
@@ -212,12 +219,14 @@ function takeScreenshot(argv) {
             fullPage: argv.fullPage,
         });
         if (argv.pdf) {
+            let margin = JSON.parse(argv.pdfMargin);
             await page.pdf({
                 path: path
                     .join(argv.outputDir, argv.filename + '.' + 'pdf')
                     .toString(),
                 format: argv.pdfFormat,
                 landscape: argv.pdfLandscape,
+                margin: margin,
             });        
         };
 
