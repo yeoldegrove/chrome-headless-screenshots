@@ -110,6 +110,12 @@ let argv = yargs(process.argv.slice(2))
                 demandOption: false,
                 default: '{"top":"0px","left":"0px","bottom":"0px","right":"0px"}',
             })
+            .option('pdfScale', {
+                description: 'Scales the rendinger of the PDF file, must a number between 0.1 and 2',
+                type: 'number',
+                demandOption: false,
+                default: 1,
+            })
             .option('fullPage', {
                 description: 'Take a screenshot of the full scrollable page',
                 type: 'boolean',
@@ -227,6 +233,7 @@ function takeScreenshot(argv) {
                 format: argv.pdfFormat,
                 landscape: argv.pdfLandscape,
                 margin: margin,
+                scale: argv.pdfScale,
             });        
         };
 
