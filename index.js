@@ -56,6 +56,18 @@ let argv = yargs(process.argv.slice(2))
                 demandOption: false,
                 default: '',
             })
+            .option('headers', {
+                description: 'Headers in json format as string',
+                type: 'string',
+                demandOption: false,
+                default: '',
+            })
+            .option('headersFile', {
+                description: 'Path of the file containing the headers',
+                type: 'string',
+                demandOption: false,
+                default: '',
+            })
             .option('delay', {
                 description: 'Delay before taking the screenshot in ms',
                 type: 'number',
@@ -160,6 +172,26 @@ function takeScreenshot(argv) {
                 await page.setCookie(...cookies);
             } else {
                 await page.setCookie(cookies);
+            }
+        }
+
+        if (argv.headers) {
+            let headers = JSON.parse(argv.headers);
+            if (Array.isArray(headers)) {
+                await page.setExtraHTTPHeaders(...headers);
+            } else {
+                await page.setExtraHTTPHeaders(headers);
+            }
+        }
+
+        if (argv.headersFile) {
+            let headers = JSON.parse(
+                fs.readFileSync(path.join(argv.inputDir, argv.headersFile))
+            );
+            if (Array.isArray(headers)) {
+                await page.setExtraHTTPHeaders(...headers);
+            } else {
+                await page.setExtraHTTPHeaders(headers);
             }
         }
 
