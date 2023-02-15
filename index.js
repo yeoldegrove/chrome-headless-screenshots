@@ -80,12 +80,25 @@ let argv = yargs(process.argv.slice(2))
                 demandOption: false,
                 default: 30000,
             })
+            .option('waitUntil', {
+                description: 'When to declare the page load complete. See https://pptr.dev/api/puppeteer.page.goto for details.',
+                type: 'string',
+                choices: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2'],
+                demandOption: false,
+                default: 'load',
+            })
             .option('format', {
                 description: 'Image format of the screenshot',
                 type: 'string',
                 choices: ['png', 'jpeg', 'webp'],
                 demandOption: false,
                 default: 'png',
+            })
+            .option('fullPage', {
+                description: 'Take a screenshot of the full scrollable page',
+                type: 'boolean',
+                demandOption: false,
+                default: false,
             })
             .option('pdf', {
                 description: 'Create a PDF file',
@@ -115,19 +128,6 @@ let argv = yargs(process.argv.slice(2))
                 type: 'number',
                 demandOption: false,
                 default: 1,
-            })
-            .option('fullPage', {
-                description: 'Take a screenshot of the full scrollable page',
-                type: 'boolean',
-                demandOption: false,
-                default: false,
-            })
-            .option('waitUntil', {
-                description: 'When to declare the page load complete. See https://pptr.dev/api/puppeteer.page.goto for details.',
-                type: 'string',
-                choices: ['load', 'domcontentloaded', 'networkidle0', 'networkidle2'],
-                demandOption: false,
-                default: 'load',
             })
             .positional('url', {
                 description:
@@ -211,6 +211,10 @@ function takeScreenshot(argv) {
             } else {
                 await page.setExtraHTTPHeaders(headers);
             }
+        }
+
+        if (argv.urlLogin) {
+            await page.goto(argv.urlLogin, {timeout: argv.timeout, waitUntil: argv.waitUntil});
         }
 
         await page.goto(argv.url, {timeout: argv.timeout, waitUntil: argv.waitUntil});
